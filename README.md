@@ -3,7 +3,7 @@
 ![Tests and Lint](https://github.com/aismlv/minivnn/actions/workflows/test_and_lint.yml/badge.svg)
 ![Publish to PyPI](https://github.com/aismlv/minivnn/actions/workflows/publish.yml/badge.svg)
 [![PyPI version](https://badge.fury.io/py/minivnn.svg)](https://pypi.org/project/minivnn/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 `minivnn` (pronounced "minivan" 🚐) is an exact nearest neighbor search Python library for those times when "approximate" just won't cut it (or is simply overkill).
 
