@@ -1,6 +1,7 @@
 # minivnn
 
 ![Tests](https://github.com/aismlv/minivnn/actions/workflows/test_and_lint.yml/badge.svg)
+[![codecov](https://codecov.io/gh/aismlv/minivnn/branch/main/graph/badge.svg?token=5J503UR8O7)](https://codecov.io/gh/aismlv/minivnn)
 [![PyPI version](https://badge.fury.io/py/minivnn.svg)](https://pypi.org/project/minivnn/)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
