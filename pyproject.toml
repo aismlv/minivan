@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "minivnn"
-version = "0.1.0"
+version = "0.1.1"
 description = "Exact nearest neighbor search library for those times when \"approximate\" just won't cut it (or is simply overkill)"
 authors = ["aismlv <adilzhan.ismailov@gmail.com>"]
 license = "Apache-2.0"
@@ -16,6 +16,12 @@ pytest = "^7.3.1"
 black = "^23.3.0"
 flake8 = "^6.0.0"
 pre-commit = "^3.2.2"
+pytest-cov = "^4.0.0"
+
+[tool.poetry.group.benchmark]
+optional = true
+
+[tool.poetry.group.benchmark.dependencies]
 
 [tool.black]
 line-length = 120

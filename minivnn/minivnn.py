@@ -1,5 +1,9 @@
+from typing import List, Tuple, Union
+
 import numpy as np
-from typing import List, Tuple
+
+DOT_PRODUCT = "dot_product"
+COSINE = "cosine"
 
 
 def normalize(embedding: np.ndarray) -> np.ndarray:
@@ -7,31 +11,48 @@ def normalize(embedding: np.ndarray) -> np.ndarray:
 
 
 class Index:
-    def __init__(self, dim: int, metric: str = "dot") -> None:
+    def __init__(self, dim: int, metric: str = DOT_PRODUCT) -> None:
         self.dim = dim
         self.metric = metric
         self.embeddings = np.empty((0, dim))
         self.index_map: List[int] = []
 
-    def add(self, index: int, embedding: np.ndarray) -> None:
-        if index in self.index_map:
-            raise ValueError(f"Index {index} already exists.")
+    def add_items(self, indices: List[int], embeddings: Union[List[np.ndarray], np.ndarray]) -> None:
+        for index in indices:
+            if index in self.index_map:
+                raise ValueError(f"Index {index} already exists.")
 
-        embedding = embedding.reshape(1, -1)
-        if embedding.shape[1] != self.dim:
-            raise ValueError(f"Embedding has invalid dimension: {embedding.shape}. Expected dimension: {self.dim}.")
-        if self.metric == "cosine":
-            embedding = normalize(embedding)
+        if isinstance(embeddings, list):
+            embeddings = [embedding.reshape(1, -1) for embedding in embeddings]
+            for embedding in embeddings:
+                if embedding.shape[1] != self.dim:
+                    raise ValueError(
+                        f"Embedding has invalid dimension: {embedding.shape[1]}. Expected dimension: {self.dim}."
+                    )
+            embeddings = np.vstack(embeddings)
 
-        self.embeddings = np.append(self.embeddings, embedding.reshape(1, -1), axis=0)
-        self.index_map.append(index)
+        elif isinstance(embeddings, np.ndarray):
+            if embeddings.shape != (len(indices), self.dim):
+                raise ValueError(
+                    f"Embedding has invalid shape: {embeddings.shape}. Expected shape: {(len(indices), self.dim)}."
+                )
 
-    def delete(self, index: int) -> None:
-        if index not in self.index_map:
-            raise ValueError(f"Index {index} not found.")
-        row_to_delete = self.index_map.index(index)
-        self.embeddings = np.delete(self.embeddings, row_to_delete, axis=0)
-        del self.index_map[row_to_delete]
+        if self.metric == COSINE:
+            embeddings = normalize(embeddings)
+
+        self.embeddings = np.append(self.embeddings, embeddings, axis=0)
+        self.index_map.extend(indices)
+
+    def delete_items(self, indices: List[int]) -> None:
+        for index in indices:
+            if index not in self.index_map:
+                raise ValueError(f"Index {index} not found.")
+
+        rows_to_delete = [self.index_map.index(index) for index in indices]
+        self.embeddings = np.delete(self.embeddings, rows_to_delete, axis=0)
+
+        for index in rows_to_delete:
+            del self.index_map[index]
 
     def save(self, filepath: str) -> None:
         np.savez_compressed(filepath, embeddings=self.embeddings, index_map=np.array(self.index_map))
@@ -42,13 +63,15 @@ class Index:
             self.index_map = data["index_map"].tolist()
 
     def query(self, query_embedding: np.ndarray, k: int = 1) -> List[Tuple[int, float]]:
-        if self.metric == "dot":
+        if self.metric == DOT_PRODUCT:
             similarities = np.dot(self.embeddings, query_embedding)
-        elif self.metric == "cosine":
+        elif self.metric == COSINE:
             normalized_query = normalize(query_embedding)
             similarities = np.dot(self.embeddings, normalized_query)
         else:
-            raise ValueError(f"Invalid metric: {self.metric}. Supported metrics are 'dot' and 'cosine'.")
+            raise ValueError(
+                f"Invalid metric: {self.metric}. " f"Supported metrics are '{DOT_PRODUCT}' and '{COSINE}'."
+            )
 
         top_k_indices = np.argpartition(similarities, -k)[-k:]
         top_k_indices_sorted = top_k_indices[np.argsort(-similarities[top_k_indices])]
