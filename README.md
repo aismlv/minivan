@@ -51,8 +51,9 @@ new_index.load(filepath)
 ```
 
 ## Comparison with Approximate Nearest Neighbor Search
-Based on a [quick benchmark](https://github.com/aismlv/minivn/blob/main/benchmark/benchmark.md), you might not require an ANN and go with a simpler approach if:
+Based on a [quick benchmark](https://github.com/aismlv/minivn/blob/main/benchmark/benchmark.md), you might not require an ANN and go with a simpler approach if some of the below are true:
 
 - Your document set isn't in the millions
 - You're in the experimentation phase and want to iterate quickly on the index
-- You require the best recall and don't want to spend time [fine-tuning hyperparameters](https://github.com/erikbern/ann-benchmarks)
+- Your application requires the best recall
+- You don't want to fine-tune any hyperparameters (which can affect [ANN performance](https://github.com/erikbern/ann-benchmarks) quite a lot)
