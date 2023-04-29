@@ -30,7 +30,8 @@ embedding1 = np.random.rand(128)
 embedding2 = np.random.rand(128)
 embedding3 = np.random.rand(128)
 
-index.add([1, 2, 3], [embedding1, embedding2, embedding3])
+index.add_items([1, 2, 3], [embedding1, embedding2, embedding3])
+index.add_items([4, 5, 6], np.random.rand(3, 128))
 
 # Delete embeddings from the index
 index.delete_items([3])
@@ -42,4 +43,4 @@ result = index.query(query_embedding, k=1)
 print(result)  # Returns [(index, similarity)] of the nearest neighbor
 ```
 
-Supported metrics are cosine similarity and dot product.
+Cosine similarity and dot product are supported.

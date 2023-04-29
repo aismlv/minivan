@@ -11,11 +11,19 @@ def normalize(embedding: np.ndarray) -> np.ndarray:
 
 
 class Index:
-    def __init__(self, dim: int, metric: str = DOT_PRODUCT) -> None:
+    def __init__(self, dim: int, metric: str = DOT_PRODUCT, dtype=np.float32) -> None:
         self.dim = dim
         self.metric = metric
-        self.embeddings = np.empty((0, dim))
+        self.dtype = dtype
+        self.embeddings = np.empty((0, dim), dtype=dtype)
         self.index_map: List[int] = []
+
+        if self.metric == DOT_PRODUCT:
+            self.calc_similarities = lambda query_embedding: np.dot(self.embeddings, query_embedding)
+        elif self.metric == COSINE:
+            self.calc_similarities = lambda query_embedding: np.dot(self.embeddings, normalize(query_embedding))
+        else:
+            raise ValueError(f"Invalid metric: {metric}. Supported metrics are '{DOT_PRODUCT}' and '{COSINE}'.")
 
     def add_items(self, indices: List[int], embeddings: Union[List[np.ndarray], np.ndarray]) -> None:
         for index in indices:
@@ -40,7 +48,7 @@ class Index:
         if self.metric == COSINE:
             embeddings = normalize(embeddings)
 
-        self.embeddings = np.append(self.embeddings, embeddings, axis=0)
+        self.embeddings = np.append(self.embeddings, embeddings.astype(self.dtype), axis=0)
         self.index_map.extend(indices)
 
     def delete_items(self, indices: List[int]) -> None:
@@ -63,16 +71,8 @@ class Index:
             self.index_map = data["index_map"].tolist()
 
     def query(self, query_embedding: np.ndarray, k: int = 1) -> List[Tuple[int, float]]:
-        if self.metric == DOT_PRODUCT:
-            similarities = np.dot(self.embeddings, query_embedding)
-        elif self.metric == COSINE:
-            normalized_query = normalize(query_embedding)
-            similarities = np.dot(self.embeddings, normalized_query)
-        else:
-            raise ValueError(
-                f"Invalid metric: {self.metric}. " f"Supported metrics are '{DOT_PRODUCT}' and '{COSINE}'."
-            )
-
+        query_embedding = query_embedding.astype(self.dtype)
+        similarities = self.calc_similarities(query_embedding)
         top_k_indices = np.argpartition(similarities, -k)[-k:]
         top_k_indices_sorted = top_k_indices[np.argsort(-similarities[top_k_indices])]
         top_k_values = similarities[top_k_indices_sorted]
