@@ -22,8 +22,8 @@ Here's an example of how to use minivn:
 from minivn import Index
 import numpy as np
 
-# Create an index with 128-dimensional embeddings and cosine similarity metric
-index = Index(dim=128, metric="cosine")
+# Create an index with 128-dimensional embeddings and dot product metric. Cosine similarity is also supported
+index = Index(dim=128, metric="dot_product")
 
 # Add embeddings to the index
 embedding1 = np.random.rand(128)
@@ -43,4 +43,9 @@ result = index.query(query_embedding, k=1)
 print(result)  # Returns [(index, similarity)] of the nearest neighbor
 ```
 
-Cosine similarity and dot product are supported.
+## Comparison with Approximate Nearest Neighbor Search
+Based on a [quick benchmark](https://github.com/aismlv/minivn/blob/main/benchmark/benchmark.md), you might not require an ANN and go with a simpler approach if:
+
+- Your document set isn't in the millions
+- You're in the experimentation phase and want to iterate quickly on the index
+- You require the best recall and don't want to spend time [fine-tuning hyperparameters](https://github.com/erikbern/ann-benchmarks)
