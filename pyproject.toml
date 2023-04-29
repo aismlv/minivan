@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "minivn"
-version = "0.1.1"
+version = "0.1.2"
 description = "Exact nearest neighbor search library for those times when \"approximate\" just won't cut it (or is simply overkill)"
 authors = ["aismlv <adilzhan.ismailov@gmail.com>"]
 license = "Apache-2.0"
@@ -23,10 +23,11 @@ optional = true
 
 [tool.poetry.group.benchmark.dependencies]
 pandas = "^2.0.1"
-altair = "^4.2.2"
+altair = "5.0.0rc1"
 hnswlib = "^0.7.0"
 ipykernel = "^6.22.0"
 huggingface-hub = "^0.14.1"
+vl-convert-python = "^0.8.1"
 
 [tool.black]
 line-length = 120

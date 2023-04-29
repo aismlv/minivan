@@ -2,26 +2,26 @@
 
 [[package]]
 name = "altair"
-version = "4.2.2"
+version = "5.0.0rc1"
 description = "Altair: A declarative statistical visualization library for Python."
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "altair-4.2.2-py3-none-any.whl", hash = "sha256:8b45ebeaf8557f2d760c5c77b79f02ae12aee7c46c27c06014febab6f849bc87"},
-    {file = "altair-4.2.2.tar.gz", hash = "sha256:39399a267c49b30d102c10411e67ab26374156a84b1aeb9fcd15140429ba49c5"},
+    {file = "altair-5.0.0rc1-py3-none-any.whl", hash = "sha256:ef735f44ef246ded7526a393232a5227b319c610d27487b5ceb9b1d70e9df532"},
+    {file = "altair-5.0.0rc1.tar.gz", hash = "sha256:b9f565040df773dc915a708ea30f37a0d04a307de4957c1a719eaf9492c627a0"},
 ]
 
 [package.dependencies]
-entrypoints = "*"
 jinja2 = "*"
 jsonschema = ">=3.0"
 numpy = "*"
 pandas = ">=0.18"
 toolz = "*"
+typing-extensions = {version = ">=4.0.1", markers = "python_version < \"3.11\""}
 
 [package.extras]
-dev = ["black", "docutils", "flake8", "ipython", "m2r", "mistune (<2.0.0)", "pytest", "recommonmark", "sphinx", "vega-datasets"]
+dev = ["black (<24)", "flake8", "ipython", "m2r", "pytest", "pytest-cov", "vega-datasets", "vl-convert-python"]
 
 [[package]]
 name = "appnope"
@@ -484,18 +484,6 @@ python-versions = "*"
 files = [
     {file = "distlib-0.3.6-py2.py3-none-any.whl", hash = "sha256:f35c4b692542ca110de7ef0bea44d73981caeb34ca0b9b6b2e6d7790dda8f80e"},
     {file = "distlib-0.3.6.tar.gz", hash = "sha256:14bad2d9b04d3a36127ac97f30b12a19268f211063d8f8ee4f47108896e11b46"},
-]
-
-[[package]]
-name = "entrypoints"
-version = "0.4"
-description = "Discover and load entry points from installed packages."
-category = "dev"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "entrypoints-0.4-py3-none-any.whl", hash = "sha256:f174b5ff827504fd3cd97cc3f8649f3693f51538c7e4bdf3ef002c8429d42f9f"},
-    {file = "entrypoints-0.4.tar.gz", hash = "sha256:b706eddaa9218a19ebcd67b56818f05bb27589b1ca9e8d797b74affad4ccacd4"},
 ]
 
 [[package]]
@@ -1835,6 +1823,42 @@ docs = ["furo (>=2023.3.27)", "proselint (>=0.13)", "sphinx (>=6.1.3)", "sphinx-
 test = ["covdefaults (>=2.3)", "coverage (>=7.2.3)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7)", "packaging (>=23.1)", "pytest (>=7.3.1)", "pytest-env (>=0.8.1)", "pytest-freezegun (>=0.4.2)", "pytest-mock (>=3.10)", "pytest-randomly (>=3.12)", "pytest-timeout (>=2.1)"]
 
 [[package]]
+name = "vl-convert-python"
+version = "0.8.1"
+description = "Convert Vega-Lite chart specifications to SVG, PNG, or Vega"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "vl_convert_python-0.8.1-cp310-cp310-macosx_10_7_x86_64.whl", hash = "sha256:0edf741856fa855dd23a62e2f2c2604bd76076b2a16a0e30654f7ad12d979479"},
+    {file = "vl_convert_python-0.8.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:53f331f2ff855abcedbe5ab899fd3cabe47624d6c6e7202b5b7e677e3d268c4d"},
+    {file = "vl_convert_python-0.8.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a415dbd35d9827fbdf9430368adbf70d50234845550f04d88c0e5a6885f2481d"},
+    {file = "vl_convert_python-0.8.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5573c2cd6405756bcf5027131241025dd2b20fc78ce2e4e3d61777c0c335c02c"},
+    {file = "vl_convert_python-0.8.1-cp310-none-win_amd64.whl", hash = "sha256:fc020c2cea4be72fccebc62ecca7655c413aadab80d60cbc413d3340abcae6d9"},
+    {file = "vl_convert_python-0.8.1-cp311-cp311-macosx_10_7_x86_64.whl", hash = "sha256:99a0ee31d02db48684c215dd322c44f56a671af9242e45a0b0d9a0b769b6c0ed"},
+    {file = "vl_convert_python-0.8.1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:0a9a206c05d2d0d53eced3b8025250cfa8a20420ef26d442852c2603b31d63cf"},
+    {file = "vl_convert_python-0.8.1-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:5da89ef55ba818270c5ec2bcebc73d4df5a97254bec48f6192a30e3ac67522fd"},
+    {file = "vl_convert_python-0.8.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2d4eb62579764c99a4ce7830baf9367e46b7725491af44693ba18083d0212a88"},
+    {file = "vl_convert_python-0.8.1-cp311-none-win_amd64.whl", hash = "sha256:e24b25fd0d7e7fd77269054b29caf732c84bc7ec025980562f5e5e779f2fbb12"},
+    {file = "vl_convert_python-0.8.1-cp37-cp37m-macosx_10_7_x86_64.whl", hash = "sha256:369eeae4d52b0e567baca3c05b118e55e43bb795d74864d94d9549fd0d6400a6"},
+    {file = "vl_convert_python-0.8.1-cp37-cp37m-macosx_11_0_arm64.whl", hash = "sha256:a89838e68983fb65a9e3658665eec438def5d4cf4426117b30d1aada423a1b83"},
+    {file = "vl_convert_python-0.8.1-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e5915f47aed0eb7f217c7b3cd1fac9b56ded67d27a86f527ccd9f69340c8a70c"},
+    {file = "vl_convert_python-0.8.1-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3038a4d7291f2d9a7f88bbb119a37acffd1e20ca754873ef8bc2600f5af02615"},
+    {file = "vl_convert_python-0.8.1-cp37-none-win_amd64.whl", hash = "sha256:7e81387be9211abf0685721bed5f50c428e4cf353a5db60fb0cc4ad671f72ca7"},
+    {file = "vl_convert_python-0.8.1-cp38-cp38-macosx_10_7_x86_64.whl", hash = "sha256:25535918da66eca04498586bb259c3b7214f56a60b2e71a27ac2b31864560bfb"},
+    {file = "vl_convert_python-0.8.1-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:1f36b32bc4c3c9d190c41925d451866c57feb8fe730dbe3cc6814626bd112b84"},
+    {file = "vl_convert_python-0.8.1-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:abee1c03726673082a2a94e814b9b6b5fdbde6f7b40f098f7338a43a73161086"},
+    {file = "vl_convert_python-0.8.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0f85e6ad4ff9bd9fd297c1aebd00c42738a0dab1c2e175ce4c2bd5f313b3c409"},
+    {file = "vl_convert_python-0.8.1-cp38-none-win_amd64.whl", hash = "sha256:3dc425f0062343742f5eee158cfe7850d596b101c5c0e1f8d178528a580d2e5b"},
+    {file = "vl_convert_python-0.8.1-cp39-cp39-macosx_10_7_x86_64.whl", hash = "sha256:74bb68d7024130dd87a18dbf5e6cb25feb11e7192885967c44dccd4bcb36636d"},
+    {file = "vl_convert_python-0.8.1-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:c771f8995c8a995e35042e92975d92a250ed7b569e45b1d4ca4378c215262df0"},
+    {file = "vl_convert_python-0.8.1-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3cf62189395ae5cb83bb4c7831b8b99e7868128837ed6967e3a32bc747e01f8f"},
+    {file = "vl_convert_python-0.8.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1d33bff33664cb5eb1151434d4cb7a0812b897b857698fa60e989eeaa358f447"},
+    {file = "vl_convert_python-0.8.1-cp39-none-win_amd64.whl", hash = "sha256:a228d819389a9726cfb8f357743110fcfc6ffd25d3bc0ff5766b8c64170b575a"},
+    {file = "vl_convert_python-0.8.1.tar.gz", hash = "sha256:80ab07aaa4f2df120537747152d18581d9e27760ed14769a3c09466fa5c2f07d"},
+]
+
+[[package]]
 name = "wcwidth"
 version = "0.2.6"
 description = "Measures the displayed width of unicode strings in a terminal"
@@ -1865,4 +1889,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "a2d23241950bb62daf11b3191408e699ffba77b150ecb3e7033bdd625c5d85d7"
+content-hash = "b3670e54b254ade41f6e236cde1065b2bf3e9668aa8adea0a84ab1b88173c739"
