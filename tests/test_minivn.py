@@ -1,14 +1,20 @@
 import numpy as np
 import pytest
 
-from minivnn import Index
-from minivnn.minivnn import normalize
+from minivn import Index
+from minivn.minivn import normalize
 
 
 def test_normalize():
     embedding = np.array([0.1, 0.2, 0.3])
     normalized_embedding = normalize(embedding)
     assert np.allclose(normalized_embedding, embedding / np.linalg.norm(embedding))
+    assert np.allclose(np.power(normalized_embedding, 2).sum(), 1)
+
+    embedding = np.array([[0.1, 0.2, 0.3], [0.2, 0.3, 0.4]])
+    normalized_embedding = normalize(embedding)
+    assert np.allclose(normalized_embedding, embedding / np.linalg.norm(embedding, axis=1, keepdims=True))
+    assert np.allclose(np.power(normalized_embedding, 2).sum(axis=1), 1)
 
 
 def test_add_items_list():
@@ -114,5 +120,5 @@ def test_query_cosine():
     result = index.query(query_embedding, k=2)
 
     assert len(result) == 2
-    assert result[0][0] == 4
-    assert result[1][0] == 3
+    assert result[0][0] == 3
+    assert result[1][0] == 2
