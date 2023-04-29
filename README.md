@@ -31,6 +31,7 @@ embedding2 = np.random.rand(128)
 embedding3 = np.random.rand(128)
 
 index.add_items([1, 2, 3], [embedding1, embedding2, embedding3])
+# or
 index.add_items([4, 5, 6], np.random.rand(3, 128))
 
 # Delete embeddings from the index
@@ -41,6 +42,12 @@ query_embedding = np.random.rand(128)
 result = index.query(query_embedding, k=1)
 
 print(result)  # Returns [(index, similarity)] of the nearest neighbor
+
+# Save and load
+index.save(filepath)
+
+new_index = Index(dim=128, metric="dot_product")
+new_index.load(filepath)
 ```
 
 ## Comparison with Approximate Nearest Neighbor Search
