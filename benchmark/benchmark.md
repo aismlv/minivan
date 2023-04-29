@@ -21,3 +21,15 @@ Based on these results, the simpler brute force approach could be a better choic
 - You're in the experimentation phase and want to iterate quickly on the index
 - Your application requires the best recall
 - You don't want to fine-tune any hyperparameters (which can affect [ANN performance](https://github.com/erikbern/ann-benchmarks) quite a lot)
+
+## Replication
+To replicate, clone the repository and run
+
+```
+poetry install --with benchmark
+python download_embeddings.py
+python benchmark.py
+python visualise.py
+```
+
+The exact values are saved in `assets/results.jsonl`
