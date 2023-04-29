@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "minivnn"
+name = "minivn"
 version = "0.1.1"
 description = "Exact nearest neighbor search library for those times when \"approximate\" just won't cut it (or is simply overkill)"
 authors = ["aismlv <adilzhan.ismailov@gmail.com>"]
@@ -22,6 +22,11 @@ pytest-cov = "^4.0.0"
 optional = true
 
 [tool.poetry.group.benchmark.dependencies]
+pandas = "^2.0.1"
+altair = "^4.2.2"
+hnswlib = "^0.7.0"
+ipykernel = "^6.22.0"
+huggingface-hub = "^0.14.1"
 
 [tool.black]
 line-length = 120
