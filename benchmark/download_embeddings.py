@@ -1,9 +1,10 @@
-import numpy as np
-from tqdm import tqdm
-import pandas as pd
-from huggingface_hub import snapshot_download
 import os
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
+from huggingface_hub import snapshot_download
+from tqdm import tqdm
 
 
 def download_embeddings(num_partitions, local_path):
