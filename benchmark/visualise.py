@@ -1,5 +1,5 @@
-import pandas as pd
 import altair as alt
+import pandas as pd
 
 if __name__ == "__main__":
     df = pd.read_json("assets/results.jsonl", lines=True)
