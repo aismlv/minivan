@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from minivnn import Index
-from minivnn.minivnn import normalize
+from minivn import Index
+from minivn.minivn import normalize
 
 
 def test_normalize():
