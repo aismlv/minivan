@@ -19,9 +19,9 @@ class Index:
         self.index_map: List[int] = []
 
         if self.metric == DOT_PRODUCT:
-            self.calc_similarities = lambda query_embedding: np.dot(self.embeddings, query_embedding)
+            self.calc_similarities = lambda query_embedding: self.embeddings @ query_embedding
         elif self.metric == COSINE:
-            self.calc_similarities = lambda query_embedding: np.dot(self.embeddings, normalize(query_embedding))
+            self.calc_similarities = lambda query_embedding: self.embeddings @ normalize(query_embedding)
         else:
             raise ValueError(f"Invalid metric: {metric}. Supported metrics are '{DOT_PRODUCT}' and '{COSINE}'.")
 
