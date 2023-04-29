@@ -7,7 +7,7 @@ COSINE = "cosine"
 
 
 def normalize(embedding: np.ndarray) -> np.ndarray:
-    return embedding / np.linalg.norm(embedding)
+    return embedding / np.linalg.norm(embedding, axis=-1, keepdims=True)
 
 
 class Index:
