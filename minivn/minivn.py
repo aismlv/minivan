@@ -12,10 +12,10 @@ def normalize(embedding: np.ndarray) -> np.ndarray:
 
 
 class Index:
-    def __init__(self, dim: int, metric: str = DOT_PRODUCT, dtype=np.float32) -> None:
+    def __init__(self, dim: int, metric: str = DOT_PRODUCT, dtype: str = "float32") -> None:
         self.dim = dim
         self.metric = metric
-        self.dtype = dtype
+        self.dtype = np.dtype(dtype)
         self.embeddings = np.empty((0, dim), dtype=dtype)
         self.index_map: List[int] = []
 
@@ -65,7 +65,12 @@ class Index:
 
     def save(self, filepath: str) -> None:
         np.savez_compressed(
-            filepath, embeddings=self.embeddings, index_map=np.array(self.index_map), metric=self.metric
+            filepath,
+            embeddings=self.embeddings,
+            index_map=np.array(self.index_map),
+            metric=self.metric,
+            dim=self.dim,
+            dtype=str(self.dtype),
         )
 
     def load(self, filepath: str) -> None:
@@ -74,8 +79,26 @@ class Index:
                 raise ValueError(
                     f"Metric mismatch. Index metric: {self.metric}. Loaded index metric: {data['metric'].item()}."
                 )
+            if data["dim"].item() != self.dim:
+                raise ValueError(
+                    f"Dimension mismatch. Index dimension: {self.dim}. Loaded index dimension: {data['dim'].item()}."
+                )
+            if data["dtype"].item() != self.dtype:
+                raise ValueError(
+                    f"Dtype mismatch. Index dtype: {self.dtype}. Loaded index dtype: {data['dtype'].item()}."
+                )
             self.embeddings = data["embeddings"]
             self.index_map = data["index_map"].tolist()
+
+    @classmethod
+    def from_file(cls, filepath: str) -> "Index":
+        with np.load(filepath) as data:
+            metric = data["metric"].item()
+            dim = data["dim"].item()
+            dtype = data["dtype"].item()
+        index = cls(dim, metric, dtype)
+        index.load(filepath)
+        return index
 
     def query(self, query_embedding: np.ndarray, k: int = 1) -> List[Tuple[int, float]]:
         query_embedding = query_embedding.astype(self.dtype)
