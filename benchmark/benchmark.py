@@ -69,6 +69,17 @@ def benchmark_hnswlib(index, query_set, k=10):
     return times
 
 
+def print_results(conf):
+    print(f"Results for {conf['index']}, {conf['num_embeddings']:,}:")
+    print(f"Build time: {conf['build_time']:.2f} ms")
+    print(f"Mean query time: {conf['mean']:.2f} ms")
+    print(f"Std query time: {conf['std']:.2f} ms")
+    print(f"Max query time: {conf['max']:.2f} ms")
+    print(f"Min query time: {conf['min']:.2f} ms")
+    print(f"Median query time: {conf['median']:.2f} ms")
+    print()
+
+
 if __name__ == "__main__":
     k = 10
     dim = 768
@@ -108,6 +119,8 @@ if __name__ == "__main__":
             conf["max"] = np.max(times)
             conf["min"] = np.min(times)
             conf["median"] = np.median(times)
+
+            print_results(conf)
 
             with open("assets/results.jsonl", "a") as f:
                 f.write(json.dumps(conf) + "\n")
