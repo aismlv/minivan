@@ -22,6 +22,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install poetry
 
+    - name: Check package version
+      run: |
+        package_version=$(poetry version | cut -d' ' -f2)
+        tag_name=${{ github.event.release.tag_name }}
+        if [ "${tag_name#v}" != "$package_version" ]; then
+          echo "ERROR: Package version does not match release tag"
+          echo "Package version: $package_version, tag name: $tag_name"
+          exit 1
+        fi
+
     - name: Build package
       run: poetry build
 
