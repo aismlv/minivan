@@ -1,3 +1,4 @@
+import logging
 from typing import List, Tuple, Union
 
 import numpy as np
@@ -28,7 +29,7 @@ class Index:
     def add_items(self, indices: List[int], embeddings: Union[List[np.ndarray], np.ndarray]) -> None:
         for index in indices:
             if index in self.index_map:
-                raise ValueError(f"Index {index} already exists.")
+                raise KeyError(f"Index {index} already exists.")
 
         if isinstance(embeddings, list):
             embeddings = [embedding.reshape(1, -1) for embedding in embeddings]
@@ -54,7 +55,7 @@ class Index:
     def delete_items(self, indices: List[int]) -> None:
         for index in indices:
             if index not in self.index_map:
-                raise ValueError(f"Index {index} not found.")
+                raise KeyError(f"Index {index} not found.")
 
         rows_to_delete = [self.index_map.index(index) for index in indices]
         self.embeddings = np.delete(self.embeddings, rows_to_delete, axis=0)
@@ -78,3 +79,24 @@ class Index:
         top_k_values = similarities[top_k_indices_sorted]
 
         return [(self.index_map[i], similarity) for i, similarity in zip(top_k_indices_sorted, top_k_values)]
+
+    def __len__(self) -> int:
+        return len(self.index_map)
+
+    def __repr__(self) -> str:
+        return f"Index(num_items={len(self)}, dim={self.dim}, metric={self.metric}, dtype={self.dtype})"
+
+    def get_items(self, indices: List[int]) -> np.ndarray:
+        for index in indices:
+            if index not in self.index_map:
+                raise KeyError(f"Index {index} not found.")
+
+        if self.metric == COSINE:
+            logging.warning(
+                (
+                    f"The vector retrieved from the index using the {COSINE} metric is not equivalent "
+                    "to the initially added embeddings as it has been normalized to have a unit length"
+                )
+            )
+
+        return self.embeddings[[self.index_map.index(index) for index in indices]]
