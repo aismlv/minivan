@@ -28,7 +28,7 @@ def test_add_items_list():
     assert index.index_map[0] == 1
     assert np.allclose(index.embeddings[0], embedding1)
 
-    with pytest.raises(ValueError):
+    with pytest.raises(KeyError):
         index.add_items([1], [embedding1])
 
 
@@ -56,7 +56,7 @@ def test_add_items_cosine():
     assert index.index_map[0] == 1
     assert np.allclose(index.embeddings[0], embedding / np.linalg.norm(embedding))
 
-    with pytest.raises(ValueError):
+    with pytest.raises(KeyError):
         index.add_items([1], [embedding])
 
 
@@ -73,7 +73,7 @@ def test_delete_items():
     assert 1 not in index.index_map
     assert index.index_map[0] == 2
 
-    with pytest.raises(ValueError):
+    with pytest.raises(KeyError):
         index.delete_items([1])
 
 
@@ -122,3 +122,30 @@ def test_query_cosine():
     assert len(result) == 2
     assert result[0][0] == 3
     assert result[1][0] == 2
+
+
+def test_len():
+    index = Index(3)
+    embedding1 = np.array([0.1, 0.2, 0.3])
+    embedding2 = np.array([0.2, 0.3, 0.4])
+
+    assert len(index) == 0
+
+    index.add_items([1, 2], [embedding1, embedding2])
+    assert len(index) == 2
+
+    index.delete_items([1])
+    assert len(index) == 1
+
+
+def test_get_item():
+    index = Index(3)
+    embedding1 = np.array([0.1, 0.2, 0.3])
+    embedding2 = np.array([0.2, 0.3, 0.4])
+
+    index.add_items([1, 2], [embedding1, embedding2])
+    assert np.allclose(index.get_items([1]), embedding1)
+    assert np.allclose(index.get_items([1, 2]), np.vstack([embedding1, embedding2]))
+
+    with pytest.raises(KeyError):
+        index.get_items([3])

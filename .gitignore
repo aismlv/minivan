@@ -1,6 +1,8 @@
 *.pyc
-
-data/
 .pytest_cache/
 __pycache__/
 .DS_Store
+.coverage
+
+data/
+notebooks/
