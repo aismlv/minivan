@@ -26,7 +26,7 @@ if __name__ == "__main__":
         .properties(title="Query time for k=10 (ms)")
     )
 
-    df2 = df.sample(frac=1)
+    df2 = df.sample(frac=1)  # fixes https://github.com/altair-viz/altair/issues/1727
     build_chart = (
         alt.Chart(df2)
         .mark_bar()
@@ -45,4 +45,4 @@ if __name__ == "__main__":
         .properties(title="Build time (s)")
     )
 
-    (query_chart | build_chart).save("assets/fig_benchmark.png")
+    (query_chart | build_chart).save("assets/fig_benchmark.svg")
