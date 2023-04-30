@@ -64,10 +64,16 @@ class Index:
             del self.index_map[index]
 
     def save(self, filepath: str) -> None:
-        np.savez_compressed(filepath, embeddings=self.embeddings, index_map=np.array(self.index_map))
+        np.savez_compressed(
+            filepath, embeddings=self.embeddings, index_map=np.array(self.index_map), metric=self.metric
+        )
 
     def load(self, filepath: str) -> None:
         with np.load(filepath) as data:
+            if data["metric"].item() != self.metric:
+                raise ValueError(
+                    f"Metric mismatch. Index metric: {self.metric}. Loaded index metric: {data['metric'].item()}."
+                )
             self.embeddings = data["embeddings"]
             self.index_map = data["index_map"].tolist()
 

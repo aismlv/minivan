@@ -78,7 +78,7 @@ def test_delete_items():
 
 
 def test_save_load(tmp_path):
-    index = Index(3)
+    index = Index(3, metric="dot_product")
     embedding1 = np.array([0.1, 0.2, 0.3])
     embedding2 = np.array([0.2, 0.3, 0.4])
 
@@ -87,11 +87,15 @@ def test_save_load(tmp_path):
     filepath = tmp_path / "index_data.npz"
     index.save(filepath)
 
-    loaded_index = Index(3)
+    loaded_index = Index(3, metric="dot_product")
     loaded_index.load(filepath)
 
     assert np.allclose(loaded_index.embeddings, index.embeddings)
     assert loaded_index.index_map == index.index_map
+
+    loaded_index = Index(3, metric="cosine")
+    with pytest.raises(ValueError):
+        loaded_index.load(filepath)
 
 
 def test_query_dot_product():
