@@ -54,7 +54,7 @@ new_index.load(filepath)
 ## Comparison with Approximate Nearest Neighbor Search
 Based on a [quick benchmark](https://github.com/aismlv/minivn/blob/main/benchmark/README.md), you might not require an ANN and go with a simpler approach if any of the below apply:
 
-- Your document set isn't in the multiple millions and don't need ultra-high latency requirements (to, for example, accommodate a heavy reranker)
+- Your document set isn't in the multiple millions and you don't need ultra-high latency requirements (to, for example, accommodate a heavy reranker)
 - You're in the experimentation phase and want to iterate quickly on the index
 - Your application requires the best precision and recall
 - You don't want to fine-tune any hyperparameters (which can affect [latency/accuracy trade-off](https://github.com/erikbern/ann-benchmarks) quite a lot)
