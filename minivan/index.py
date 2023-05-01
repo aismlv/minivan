@@ -3,7 +3,15 @@ from typing import List, Tuple, Union
 
 import numpy as np
 
-from .metrics import COSINE, DOT_PRODUCT, cosine_metric, dot_product_metric, normalize
+from .metrics import (
+    COSINE,
+    DOT_PRODUCT,
+    EUCLIDEAN,
+    cosine_metric,
+    dot_product_metric,
+    euclidean_metric,
+    normalize,
+)
 
 
 class Index:
@@ -14,12 +22,14 @@ class Index:
         self.embeddings = np.empty((0, dim), dtype=dtype)
         self.index_map: List[int] = []
 
-        if self.metric == DOT_PRODUCT:
-            self.calc_similarities = dot_product_metric
-        elif self.metric == COSINE:
-            self.calc_similarities = cosine_metric
+        if metric == DOT_PRODUCT:
+            return dot_product_metric
+        elif metric == COSINE:
+            return cosine_metric
+        elif metric == EUCLIDEAN:
+            return euclidean_metric
         else:
-            raise ValueError(f"Invalid metric: {metric}. Supported metrics are '{DOT_PRODUCT}' and '{COSINE}'.")
+            raise ValueError(f"Invalid metric: {metric}. Supported metrics are: {DOT_PRODUCT}, {COSINE}, {EUCLIDEAN}.")
 
     def add_items(self, indices: List[int], embeddings: Union[List[np.ndarray], np.ndarray]) -> None:
         for index in indices:

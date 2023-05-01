@@ -1,6 +1,11 @@
 import numpy as np
 
-from minivan.metrics import cosine_metric, dot_product_metric, normalize
+from minivan.metrics import (
+    cosine_metric,
+    dot_product_metric,
+    euclidean_metric,
+    normalize,
+)
 
 
 def test_normalize():
@@ -27,3 +32,10 @@ def test_cosine_metric():
     embeddings = np.array([[0.1, 0.2, 0.3], [0.2, 0.3, 0.4]])
 
     assert np.allclose(cosine_metric(query_embedding, normalize(embeddings)), np.array([1, 0.992583]))
+
+
+def test_euclidean_metric():
+    query_embedding = np.array([0.1, 0.2, 0.3])
+    embeddings = np.array([[0.1, 0.2, 0.3], [0.2, 0.3, 0.4]])
+
+    assert np.allclose(euclidean_metric(query_embedding, embeddings), np.array([-0, -0.173205]))
