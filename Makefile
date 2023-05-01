@@ -1,6 +1,6 @@
 .PHONY: install update test test-all lint format format-check clean clean-build build publish
 
-PROJECT = minivn
+PROJECT = minivan
 
 install:
 	poetry install
@@ -22,8 +22,8 @@ test: clean
 	poetry run pytest --cov=$(PROJECT) --cov-report=xml --cov-report=term
 
 format:
-	poetry run black  --config pyproject.toml .
-	poetry run isort $(PROJECT) tests
+	poetry run black --config pyproject.toml .
+	poetry run isort --profile black .
 
 format-check:
 	poetry run flake8 --config .flake8
