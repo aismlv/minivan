@@ -19,7 +19,7 @@ clean:
 	find . -type f -name "coverage.*" -delete
 
 test: clean
-	poetry run pytest --cov=$(PROJECT) --cov-report=xml --cov-report=term
+	poetry run python -m pytest --cov=$(PROJECT) --cov-report=xml --cov-report=term
 
 format:
 	poetry run black --config pyproject.toml .
