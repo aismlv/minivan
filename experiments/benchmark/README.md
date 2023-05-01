@@ -12,7 +12,7 @@ Here we take a quick look at the performance of the package and compare it with 
 
 ## Results
 
-![Query time and build time comparison](../assets/fig_benchmark.svg)
+![Query time and build time comparison](results/fig_benchmark.svg)
 
 - As expected, `hnswlib` is much faster when it comes to queries, scaling sublinearly in the document set size
 - In contrast, `minivan` is slower and scales linearly with just over 50ms for a database of 1,000,000 vectors

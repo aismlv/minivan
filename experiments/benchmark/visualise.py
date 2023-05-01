@@ -2,7 +2,7 @@ import altair as alt
 import pandas as pd
 
 if __name__ == "__main__":
-    df = pd.read_json("assets/results.jsonl", lines=True)
+    df = pd.read_json("experiments/benchmark/results/results.jsonl", lines=True)
 
     df["num_embeddings_formatted"] = df["num_embeddings"].apply(lambda x: f"{x:,}")
     df = df[df["num_embeddings"] != 1_500_000]
@@ -45,4 +45,4 @@ if __name__ == "__main__":
         .properties(title="Build time (s)")
     )
 
-    (query_chart | build_chart).save("assets/fig_benchmark.svg")
+    (query_chart | build_chart).save("experiments/benchmark/results/fig_benchmark.svg")

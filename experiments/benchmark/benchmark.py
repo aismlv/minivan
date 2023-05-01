@@ -122,5 +122,5 @@ if __name__ == "__main__":
 
             print_results(conf)
 
-            with open("assets/results.jsonl", "a") as f:
+            with open("experiments/benchmark/results/results.jsonl", "a") as f:
                 f.write(json.dumps(conf) + "\n")
