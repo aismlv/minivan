@@ -1,9 +1,11 @@
 import numpy as np
+import pytest
 
 from minivan.metrics import (
     cosine_metric,
     dot_product_metric,
     euclidean_metric,
+    get_metric,
     normalize,
 )
 
@@ -39,3 +41,11 @@ def test_euclidean_metric():
     embeddings = np.array([[0.1, 0.2, 0.3], [0.2, 0.3, 0.4]])
 
     assert np.allclose(euclidean_metric(query_embedding, embeddings), np.array([-0, -0.173205]))
+
+
+def test_get_metric():
+    assert get_metric("dot_product") == dot_product_metric
+    assert get_metric("cosine") == cosine_metric
+    assert get_metric("euclidean") == euclidean_metric
+    with pytest.raises(ValueError):
+        get_metric("invalid_metric")

@@ -20,3 +20,14 @@ def cosine_metric(query_embedding: np.ndarray, embeddings: np.ndarray) -> np.nda
 
 def euclidean_metric(query_embedding: np.ndarray, embeddings: np.ndarray) -> np.ndarray:
     return -np.linalg.norm(embeddings - query_embedding, axis=1)
+
+
+def get_metric(metric: str):
+    if metric == "dot_product":
+        return dot_product_metric
+    elif metric == "cosine":
+        return cosine_metric
+    elif metric == "euclidean":
+        return euclidean_metric
+    else:
+        raise ValueError(f"Invalid metric: {metric}. Supported metrics are: {DOT_PRODUCT}, {COSINE}, {EUCLIDEAN}.")
