@@ -3,12 +3,7 @@ from typing import List, Tuple, Union
 
 import numpy as np
 
-DOT_PRODUCT = "dot_product"
-COSINE = "cosine"
-
-
-def normalize(embedding: np.ndarray) -> np.ndarray:
-    return embedding / np.linalg.norm(embedding, axis=-1, keepdims=True)
+from .metrics import COSINE, DOT_PRODUCT, get_metric, normalize
 
 
 class Index:
@@ -19,12 +14,7 @@ class Index:
         self.embeddings = np.empty((0, dim), dtype=dtype)
         self.index_map: List[int] = []
 
-        if self.metric == DOT_PRODUCT:
-            self.calc_similarities = lambda query_embedding: self.embeddings @ query_embedding
-        elif self.metric == COSINE:
-            self.calc_similarities = lambda query_embedding: self.embeddings @ normalize(query_embedding)
-        else:
-            raise ValueError(f"Invalid metric: {metric}. Supported metrics are '{DOT_PRODUCT}' and '{COSINE}'.")
+        self.calc_similarities = get_metric(metric)
 
     def add_items(self, indices: List[int], embeddings: Union[List[np.ndarray], np.ndarray]) -> None:
         for index in indices:
@@ -102,7 +92,7 @@ class Index:
 
     def query(self, query_embedding: np.ndarray, k: int = 1) -> List[Tuple[int, float]]:
         query_embedding = query_embedding.astype(self.dtype)
-        similarities = self.calc_similarities(query_embedding)
+        similarities = self.calc_similarities(query_embedding, self.embeddings)
         top_k_indices = np.argpartition(similarities, -k)[-k:]
         top_k_indices_sorted = top_k_indices[np.argsort(-similarities[top_k_indices])]
         top_k_values = similarities[top_k_indices_sorted]

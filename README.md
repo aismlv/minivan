@@ -16,30 +16,24 @@ pip install minivan-tools
 ```
 
 ## Usage
-Here is an example of how to use `minivan`:
-
 Create new index:
 ```python
 from minivan import Index
 import numpy as np
 
-# Create an index with 128-dimensional embeddings and dot product metric. Cosine similarity is also supported
+# Create an index with 128-dimensional embeddings and dot product metric
 index = Index(dim=128, metric="dot_product")
 
 # Add embeddings to the index
-embedding1 = np.random.rand(128)
-embedding2 = np.random.rand(128)
-embedding3 = np.random.rand(128)
-
-index.add_items([1, 2, 3], [embedding1, embedding2, embedding3])
+embeddings = [np.random.rand(128) for _ in range(3)]
+index.add_items([1, 2, 3], embeddings)
 
 # Delete embeddings from the index
 index.delete_items([3])
 ```
 
-Search for the nearest neighbors:
+Query the index for the nearest neighbor:
 ```python
-# Query the index for the nearest neighbor of a given embedding
 query_embedding = np.random.rand(128)
 result = index.query(query_embedding, k=1)
 
@@ -48,17 +42,20 @@ print(result)  # Returns [(index, similarity)] of the nearest neighbor
 
 Save the index for future use:
 ```python
-# Save
+# Save to disk
 index.save(filepath)
 
 # Load from a saved file
 new_index = Index.from_file(filepath)
 ```
 
-## Comparison with Approximate Nearest Neighbor Search
-Based on a [quick benchmark](https://github.com/aismlv/minivan/blob/main/experiments/benchmark/README.md), you might not require an ANN and go with a simpler approach if any of the below apply:
+## matmul vs ANN
 
-- Your document set isn't in the multiple millions and you don't have ultra-low latency requirements (to accommodate a heavy reranker, for example)
-- You're in the experimentation phase and want to iterate quickly on the index
+Thanks to numpy and BLAS, brute-force search is performant enough for a large set of real-world applications. There are a bunch of cases when you might not need an approximate nearest neighbour library and can go with a simpler approach:
+
+- Your document set is not in the multiple millions
+- You're in the experimentation phase and want to iterate on the index rapidly with fast build times
 - Your application requires the best accuracy
-- You don't want to fine-tune any hyperparameters (which can affect [latency/recall trade-off](https://github.com/erikbern/ann-benchmarks) quite a lot)
+- You want to avoid the need to finetune hyperparameters (which can affect [performance and latency](https://github.com/erikbern/ann-benchmarks) quite a lot)
+
+See a [quick benchmark](https://github.com/aismlv/minivan/blob/main/experiments/benchmark/README.md) for an illustration.
