@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "minivan"
+name = "minivan-tools"
 version = "0.1.4"
 description = "Exact nearest neighbor search library for those times when \"approximate\" just won't cut it (or is simply overkill)"
 authors = ["aismlv <adilzhan.ismailov@gmail.com>"]
