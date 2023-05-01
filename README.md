@@ -12,7 +12,7 @@
 Install `minivan` using `pip`:
 
 ```bash
-pip install minivan
+pip install minivan-tools
 ```
 
 ## Usage
