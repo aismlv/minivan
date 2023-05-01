@@ -24,16 +24,16 @@ Based on these results, the simpler brute force approach could be a good choice 
 - Your document set isn't in the multiple millions and you don't have ultra-low latency requirements (to accommodate a heavy reranker, for example)
 - You're in the experimentation phase and want to iterate quickly on the index
 - Your application requires the best accuracy
-- You don't want to fine-tune any hyperparameters (which can affect [latency/recall trade-off](https://github.com/erikbern/ann-benchmarks) quite a lot)
+- You don't want to finetune any hyperparameters (which can affect [latency/recall trade-off](https://github.com/erikbern/ann-benchmarks) quite a lot)
 
 ## Replication
 To replicate, clone the repository and run
 
 ```
 poetry install --with benchmark
-python download_embeddings.py
-python benchmark.py
-python visualise.py
+python experiments/benchmark/download_embeddings.py
+python experiments/benchmark/benchmark.py
+python experiments/benchmark/visualise.py
 ```
 
-The exact values are saved in `assets/results.jsonl`
+The exact values are saved in `results/results.jsonl`
