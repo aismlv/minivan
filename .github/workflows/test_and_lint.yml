@@ -32,5 +32,8 @@ jobs:
     - name: Check code formatting and lint
       run: make format-check
 
+    - name: Test building the package
+      run: make build
+
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
