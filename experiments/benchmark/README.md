@@ -21,10 +21,10 @@ Here we take a quick look at the performance of the package and compare it with 
 
 Based on these results, the simpler brute force approach could be a good choice if any of the below apply:
 
-- Your document set isn't in the multiple millions and you don't have ultra-high latency requirements (to, for example, accommodate a heavy reranker)
+- Your document set isn't in the multiple millions and you don't have ultra-low latency requirements (to accommodate a heavy reranker, for example)
 - You're in the experimentation phase and want to iterate quickly on the index
-- Your application requires the best precision and recall
-- You don't want to fine-tune any hyperparameters (which can affect [latency/accuracy trade-off](https://github.com/erikbern/ann-benchmarks) quite a lot)
+- Your application requires the best accuracy
+- You don't want to fine-tune any hyperparameters (which can affect [latency/recall trade-off](https://github.com/erikbern/ann-benchmarks) quite a lot)
 
 ## Replication
 To replicate, clone the repository and run
