@@ -5,7 +5,7 @@ import hnswlib
 import numpy as np
 from tqdm import tqdm
 
-import minivn
+import minivan
 
 CHUNK_SIZE = 139_004
 
@@ -24,9 +24,9 @@ def load_data(num_items):
     return indices, embeddings
 
 
-def build_minivn_index(indices, embeddings, dim):
+def build_minivan_index(indices, embeddings, dim):
     start = time.time()
-    index = minivn.Index(metric="dot_product", dim=dim)
+    index = minivan.Index(metric="dot_product", dim=dim)
     index.add_items(indices=indices, embeddings=embeddings)
     end = time.time()
     return index, end - start
@@ -43,7 +43,7 @@ def build_hnswlib_index(indices, embeddings, dim):
     return index, end - start
 
 
-def benchmark_minivn(index, query_set, k):
+def benchmark_minivan(index, query_set, k):
     times = []
 
     for query_embedding in tqdm(query_set):
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     test_queries = get_chunk(test_chunk_id)[:test_size]
 
     conf = {
-        "index": "minivn",
+        "index": "minivan",
         "metric": "dot_product",
         "dim": dim,
         "top_k": k,
@@ -99,17 +99,17 @@ if __name__ == "__main__":
         conf["num_embeddings"] = num_embeddings
         indices, embeddings = load_data(num_embeddings)
 
-        for index_type in ["minivn", "hnswlib"]:
+        for index_type in ["minivan", "hnswlib"]:
             conf["index"] = index_type
 
-            if index_type == "minivn":
-                index, build_time = build_minivn_index(indices, embeddings, dim)
+            if index_type == "minivan":
+                index, build_time = build_minivan_index(indices, embeddings, dim)
             elif index_type == "hnswlib":
                 index, build_time = build_hnswlib_index(indices, embeddings, dim)
             conf["build_time"] = build_time * 1000
 
-            if index_type == "minivn":
-                times = benchmark_minivn(index, test_queries, k=k)
+            if index_type == "minivan":
+                times = benchmark_minivan(index, test_queries, k=k)
             elif index_type == "hnswlib":
                 times = benchmark_hnswlib(index, test_queries, k=k)
             times = [t * 1000 for t in times]
