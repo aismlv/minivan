@@ -17,24 +17,31 @@ class Index:
         self.calc_similarities = get_metric(metric)
 
     def add_items(self, indices: List[int], embeddings: Union[List[np.ndarray], np.ndarray]) -> None:
+        if type(indices) != list:
+            raise TypeError(f"Indices must be passed as a list. Got: {type(indices)}")
+
         for index in indices:
+            if type(index) != int:
+                raise TypeError(f"Index must be an integer. Got: {type(index)}")
             if index in self.index_map:
                 raise KeyError(f"Index {index} already exists.")
 
         if isinstance(embeddings, list):
             embeddings = [embedding.reshape(1, -1) for embedding in embeddings]
-            for embedding in embeddings:
-                if embedding.shape[1] != self.dim:
-                    raise ValueError(
-                        f"Embedding has invalid dimension: {embedding.shape[1]}. Expected dimension: {self.dim}."
-                    )
+
+            lenghts = set(embedding.shape[1] for embedding in embeddings)
+            if len(lenghts) != 1:
+                raise ValueError(f"Embeddings must have the same dimension. Got: {lenghts}")
+
             embeddings = np.vstack(embeddings)
 
-        elif isinstance(embeddings, np.ndarray):
-            if embeddings.shape != (len(indices), self.dim):
-                raise ValueError(
-                    f"Embedding has invalid shape: {embeddings.shape}. Expected shape: {(len(indices), self.dim)}."
-                )
+        if not isinstance(embeddings, np.ndarray):
+            raise TypeError(f"Embeddings must be a list or a numpy array. Got: {type(embeddings)}")
+
+        if embeddings.shape != (len(indices), self.dim):
+            raise ValueError(
+                f"Embedding has invalid shape: {embeddings.shape}. Expected shape: {(len(indices), self.dim)}."
+            )
 
         if self.metric == COSINE:
             embeddings = normalize(embeddings)
@@ -43,9 +50,7 @@ class Index:
         self.index_map.extend(indices)
 
     def delete_items(self, indices: List[int]) -> None:
-        for index in indices:
-            if index not in self.index_map:
-                raise KeyError(f"Index {index} not found.")
+        self._validate_index_exists(indices)
 
         rows_to_delete = [self.index_map.index(index) for index in indices]
         self.embeddings = np.delete(self.embeddings, rows_to_delete, axis=0)
@@ -91,6 +96,16 @@ class Index:
         return index
 
     def query(self, query_embedding: np.ndarray, k: int = 1) -> List[Tuple[int, float]]:
+        if type(k) != int or k < 1:
+            raise ValueError(f"k must be a positive integer: {k}")
+        if k > len(self):
+            raise ValueError(f"k cannot be greater than the number of items in the index: {len(self)}")
+        if self.dim not in query_embedding.shape:
+            raise ValueError(
+                f"Query embedding has invalid dimension: {query_embedding.shape}. "
+                f"Expected embedding dimension: {self.dim}."
+            )
+
         query_embedding = query_embedding.astype(self.dtype)
         similarities = self.calc_similarities(query_embedding, self.embeddings)
         top_k_indices = np.argpartition(similarities, -k)[-k:]
@@ -106,9 +121,7 @@ class Index:
         return f"Index(num_items={len(self)}, dim={self.dim}, metric={self.metric}, dtype={self.dtype})"
 
     def get_items(self, indices: List[int]) -> np.ndarray:
-        for index in indices:
-            if index not in self.index_map:
-                raise KeyError(f"Index {index} not found.")
+        self._validate_index_exists(indices)
 
         if self.metric == COSINE:
             logging.warning(
@@ -119,3 +132,8 @@ class Index:
             )
 
         return self.embeddings[[self.index_map.index(index) for index in indices]]
+
+    def _validate_index_exists(self, indices: List[int]) -> None:
+        for index in indices:
+            if index not in self.index_map:
+                raise KeyError(f"Index {index} not found.")

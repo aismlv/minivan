@@ -17,6 +17,10 @@ def test_add_items_list():
 
     with pytest.raises(KeyError):
         index.add_items([1], [embedding1])
+    with pytest.raises(TypeError):
+        index.add_items(["2"], [embedding1])
+    with pytest.raises(ValueError):
+        index.add_items([3, 4], [embedding1, np.array([0.1, 0.2])])
 
 
 def test_add_items_2d_array():
@@ -121,6 +125,15 @@ def test_query_dot_product():
     assert len(result) == 2
     assert result[0][0] == 4
     assert result[1][0] == 3
+
+    with pytest.raises(ValueError):
+        index.query(query_embedding, k=0)
+    with pytest.raises(ValueError):
+        index.query(query_embedding, k=-1)
+    with pytest.raises(ValueError):
+        index.query(query_embedding, k=4)
+    with pytest.raises(ValueError):
+        index.query(np.array([0.1, 0.2, 0.3, 0.4]), k=2)
 
 
 def test_query_cosine():
