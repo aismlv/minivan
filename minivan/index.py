@@ -91,6 +91,16 @@ class Index:
         return index
 
     def query(self, query_embedding: np.ndarray, k: int = 1) -> List[Tuple[int, float]]:
+        if type(k) != int or k < 1:
+            raise ValueError(f"k must be a positive integer: {k}")
+        if k > len(self):
+            raise ValueError(f"k cannot be greater than the number of items in the index: {len(self)}")
+        if self.dim not in query_embedding.shape:
+            raise ValueError(
+                f"Query embedding has invalid dimension: {query_embedding.shape}. "
+                f"Expected embedding dimension: {self.dim}."
+            )
+
         query_embedding = query_embedding.astype(self.dtype)
         similarities = self.calc_similarities(query_embedding, self.embeddings)
         top_k_indices = np.argpartition(similarities, -k)[-k:]
