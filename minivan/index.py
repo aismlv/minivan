@@ -18,6 +18,8 @@ class Index:
 
     def add_items(self, indices: List[int], embeddings: Union[List[np.ndarray], np.ndarray]) -> None:
         for index in indices:
+            if type(index) != int:
+                raise TypeError(f"Index must be an integer. Got: {type(index)}")
             if index in self.index_map:
                 raise KeyError(f"Index {index} already exists.")
 
@@ -43,9 +45,7 @@ class Index:
         self.index_map.extend(indices)
 
     def delete_items(self, indices: List[int]) -> None:
-        for index in indices:
-            if index not in self.index_map:
-                raise KeyError(f"Index {index} not found.")
+        self._validate_index_exists(indices)
 
         rows_to_delete = [self.index_map.index(index) for index in indices]
         self.embeddings = np.delete(self.embeddings, rows_to_delete, axis=0)
@@ -116,9 +116,7 @@ class Index:
         return f"Index(num_items={len(self)}, dim={self.dim}, metric={self.metric}, dtype={self.dtype})"
 
     def get_items(self, indices: List[int]) -> np.ndarray:
-        for index in indices:
-            if index not in self.index_map:
-                raise KeyError(f"Index {index} not found.")
+        self._validate_index_exists(indices)
 
         if self.metric == COSINE:
             logging.warning(
@@ -129,3 +127,8 @@ class Index:
             )
 
         return self.embeddings[[self.index_map.index(index) for index in indices]]
+
+    def _validate_index_exists(self, indices: List[int]) -> None:
+        for index in indices:
+            if index not in self.index_map:
+                raise KeyError(f"Index {index} not found.")
