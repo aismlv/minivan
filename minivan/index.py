@@ -17,6 +17,9 @@ class Index:
         self.calc_similarities = get_metric(metric)
 
     def add_items(self, indices: List[int], embeddings: Union[List[np.ndarray], np.ndarray]) -> None:
+        if type(indices) != list:
+            raise TypeError(f"Indices must be passed as a list. Got: {type(indices)}")
+
         for index in indices:
             if type(index) != int:
                 raise TypeError(f"Index must be an integer. Got: {type(index)}")
@@ -25,18 +28,20 @@ class Index:
 
         if isinstance(embeddings, list):
             embeddings = [embedding.reshape(1, -1) for embedding in embeddings]
-            for embedding in embeddings:
-                if embedding.shape[1] != self.dim:
-                    raise ValueError(
-                        f"Embedding has invalid dimension: {embedding.shape[1]}. Expected dimension: {self.dim}."
-                    )
+
+            lenghts = set(embedding.shape[1] for embedding in embeddings)
+            if len(lenghts) != 1:
+                raise ValueError(f"Embeddings must have the same dimension. Got: {lenghts}")
+
             embeddings = np.vstack(embeddings)
 
-        elif isinstance(embeddings, np.ndarray):
-            if embeddings.shape != (len(indices), self.dim):
-                raise ValueError(
-                    f"Embedding has invalid shape: {embeddings.shape}. Expected shape: {(len(indices), self.dim)}."
-                )
+        if not isinstance(embeddings, np.ndarray):
+            raise TypeError(f"Embeddings must be a list or a numpy array. Got: {type(embeddings)}")
+
+        if embeddings.shape != (len(indices), self.dim):
+            raise ValueError(
+                f"Embedding has invalid shape: {embeddings.shape}. Expected shape: {(len(indices), self.dim)}."
+            )
 
         if self.metric == COSINE:
             embeddings = normalize(embeddings)

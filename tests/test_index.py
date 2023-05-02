@@ -18,7 +18,9 @@ def test_add_items_list():
     with pytest.raises(KeyError):
         index.add_items([1], [embedding1])
     with pytest.raises(TypeError):
-        index.add_items(["1"], [embedding1])
+        index.add_items(["2"], [embedding1])
+    with pytest.raises(ValueError):
+        index.add_items([3, 4], [embedding1, np.array([0.1, 0.2])])
 
 
 def test_add_items_2d_array():
