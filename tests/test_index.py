@@ -151,6 +151,20 @@ def test_query_cosine():
     assert result[1][0] == 2
 
 
+def test_query_item():
+    embedding1 = np.array([0.1, 0.2, 0.3])
+    embedding2 = np.array([0.2, 0.3, 0.4])
+    embedding3 = np.array([0.3, 0.4, 0.5])
+
+    index = Index(3, metric="dot_product")
+    index.add_items([2, 3, 4], [embedding1, embedding2, embedding3])
+    result = index.query_item(2, k=2)
+
+    assert len(result) == 2
+    assert result[0][0] == 4
+    assert 2 not in [item[0] for item in result]
+
+
 def test_len():
     index = Index(3)
     embedding1 = np.array([0.1, 0.2, 0.3])

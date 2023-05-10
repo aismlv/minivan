@@ -50,7 +50,7 @@ class Index:
         self.index_map.extend(indices)
 
     def delete_items(self, indices: List[int]) -> None:
-        self._validate_index_exists(indices)
+        self._validate_indices_exist(indices)
 
         rows_to_delete = [self.index_map.index(index) for index in indices]
         self.embeddings = np.delete(self.embeddings, rows_to_delete, axis=0)
@@ -114,6 +114,12 @@ class Index:
 
         return [(self.index_map[i], similarity) for i, similarity in zip(top_k_indices_sorted, top_k_values)]
 
+    def query_item(self, index: int, k: int = 1) -> List[Tuple[int, float]]:
+        self._validate_indices_exist([index])
+        query_embedding = self.get_items([index])
+        result = self.query(query_embedding.squeeze(), k)
+        return [item for item in result if item[0] != index]
+
     def __len__(self) -> int:
         return len(self.index_map)
 
@@ -121,7 +127,7 @@ class Index:
         return f"Index(num_items={len(self)}, dim={self.dim}, metric={self.metric}, dtype={self.dtype})"
 
     def get_items(self, indices: List[int]) -> np.ndarray:
-        self._validate_index_exists(indices)
+        self._validate_indices_exist(indices)
 
         if self.metric == COSINE:
             logging.warning(
@@ -133,7 +139,7 @@ class Index:
 
         return self.embeddings[[self.index_map.index(index) for index in indices]]
 
-    def _validate_index_exists(self, indices: List[int]) -> None:
+    def _validate_indices_exist(self, indices: List[int]) -> None:
         for index in indices:
             if index not in self.index_map:
                 raise KeyError(f"Index {index} not found.")
