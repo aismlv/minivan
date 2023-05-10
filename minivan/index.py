@@ -29,9 +29,9 @@ class Index:
         if isinstance(embeddings, list):
             embeddings = [embedding.reshape(1, -1) for embedding in embeddings]
 
-            lenghts = set(embedding.shape[1] for embedding in embeddings)
-            if len(lenghts) != 1:
-                raise ValueError(f"Embeddings must have the same dimension. Got: {lenghts}")
+            lengths = set(embedding.shape[1] for embedding in embeddings)
+            if len(lengths) != 1:
+                raise ValueError(f"Embeddings must have the same dimension. Got: {lengths}")
 
             embeddings = np.vstack(embeddings)
 
