@@ -51,7 +51,7 @@ new_index = Index.from_file(filepath)
 
 ## matmul vs ANN
 
-Thanks to numpy and BLAS, brute-force search is performant enough for a large set of real-world applications. There are a bunch of cases when you might not need an approximate nearest neighbour library and can go with a simpler approach:
+Due to numpy's use of BLAS and other optimisations, brute-force search is performant enough for a large set of real-world applications. There are a bunch of cases when you might not need an approximate nearest neighbour library and can go with a simpler approach:
 
 - Your document set is not in the multiple millions
 - You're in the experimentation phase and want to iterate on the index rapidly with fast build times
