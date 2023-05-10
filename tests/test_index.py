@@ -4,35 +4,40 @@ import pytest
 from minivan import Index
 
 
-def test_add_items_list():
+@pytest.mark.parametrize(
+    "indices, embeddings",
+    [
+        ([1, 2], [np.array([0.1, 0.2, 0.3]), np.array([0.2, 0.3, 0.4])]),
+        ([1, 2], np.array([[0.1, 0.2, 0.3], [0.2, 0.3, 0.4]])),
+        (np.array([1, 2]), [np.array([0.1, 0.2, 0.3]), np.array([0.2, 0.3, 0.4])]),
+        (np.array([1, 2]), np.array([[0.1, 0.2, 0.3], [0.2, 0.3, 0.4]])),
+    ],
+)
+def test_add_items(indices, embeddings):
     index = Index(3, metric="dot_product")
-    embedding1 = np.array([0.1, 0.2, 0.3])
-    embedding2 = np.array([0.2, 0.3, 0.4])
+    index.add_items(indices, embeddings)
 
-    index.add_items([1, 2], [embedding1, embedding2])
     assert index.embeddings.shape == (2, 3)
     assert len(index.index_map) == 2
     assert index.index_map[0] == 1
-    assert np.allclose(index.embeddings[0], embedding1)
+    assert np.allclose(index.embeddings[0], np.array([0.1, 0.2, 0.3]))
+
+
+def test_invalid_add_items():
+    index = Index(3, metric="dot_product")
+    embedding1 = np.array([0.1, 0.2, 0.3])
+    embedding2 = np.array([0.2, 0.3, 0.4])
+    embeddings = np.vstack([embedding1, embedding2])
 
     with pytest.raises(KeyError):
         index.add_items([1], [embedding1])
+        index.add_items([1], [embedding1])
+    with pytest.raises(TypeError):
+        index.add_items("not indices", [embedding1])
     with pytest.raises(TypeError):
         index.add_items(["2"], [embedding1])
     with pytest.raises(ValueError):
         index.add_items([3, 4], [embedding1, np.array([0.1, 0.2])])
-
-
-def test_add_items_2d_array():
-    index = Index(3, metric="dot_product")
-    embeddings = np.array([[0.1, 0.2, 0.3], [0.2, 0.3, 0.4]])
-
-    index.add_items([1, 2], embeddings)
-    assert index.embeddings.shape == (2, 3)
-    assert len(index.index_map) == 2
-    assert index.index_map[0] == 1
-    assert np.allclose(index.embeddings[0], embeddings[0])
-
     with pytest.raises(ValueError):
         index.add_items([3], embeddings)
 

@@ -16,37 +16,44 @@ class Index:
 
         self.calc_similarities = get_metric(metric)
 
-    def add_items(self, indices: List[int], embeddings: Union[List[np.ndarray], np.ndarray]) -> None:
+    def add_items(self, indices: Union[List[int], np.ndarray], embeddings: Union[List[np.ndarray], np.ndarray]) -> None:
+        if isinstance(indices, np.ndarray):
+            if indices.squeeze().ndim != 1:
+                raise ValueError(f"Indices must be a list or a 1D array. Got array with dimensions: {indices.ndim}")
+            indices = indices.squeeze().tolist()
+
         if type(indices) != list:
-            raise TypeError(f"Indices must be passed as a list. Got: {type(indices)}")
+            raise TypeError(f"Indices must be a list or a 1D array. Got: {type(indices)}")
 
         for index in indices:
             if type(index) != int:
                 raise TypeError(f"Index must be an integer. Got: {type(index)}")
             if index in self.index_map:
-                raise KeyError(f"Index {index} already exists.")
+                raise KeyError(f"Index {index} already exists")
 
         if isinstance(embeddings, list):
-            embeddings = [embedding.reshape(1, -1) for embedding in embeddings]
-
-            lengths = set(embedding.shape[1] for embedding in embeddings)
-            if len(lengths) != 1:
-                raise ValueError(f"Embeddings must have the same dimension. Got: {lengths}")
-
-            embeddings = np.vstack(embeddings)
+            result = []
+            for embedding in embeddings:
+                if embedding.squeeze().ndim != 1:
+                    raise ValueError(
+                        f"Embeddings must be a list of 1D arrays. Got array with dimensions: {embedding.ndim}"
+                    )
+                result.append(embedding.reshape(1, -1))
+            embeddings = np.vstack(result)
 
         if not isinstance(embeddings, np.ndarray):
             raise TypeError(f"Embeddings must be a list or a numpy array. Got: {type(embeddings)}")
 
-        if embeddings.shape != (len(indices), self.dim):
-            raise ValueError(
-                f"Embedding has invalid shape: {embeddings.shape}. Expected shape: {(len(indices), self.dim)}."
-            )
+        expected_shape = (len(indices), self.dim)
+        if embeddings.shape != expected_shape:
+            raise ValueError(f"Embeddings have invalid shape: {embeddings.shape}. Expected shape: {expected_shape}")
+
+        embeddings = embeddings.astype(self.dtype)
 
         if self.metric == COSINE:
             embeddings = normalize(embeddings)
 
-        self.embeddings = np.append(self.embeddings, embeddings.astype(self.dtype), axis=0)
+        self.embeddings = np.append(self.embeddings, embeddings, axis=0)
         self.index_map.extend(indices)
 
     def delete_items(self, indices: List[int]) -> None:
@@ -72,15 +79,15 @@ class Index:
         with np.load(filepath) as data:
             if data["metric"].item() != self.metric:
                 raise ValueError(
-                    f"Metric mismatch. Index metric: {self.metric}. Loaded index metric: {data['metric'].item()}."
+                    f"Metric mismatch. Index metric: {self.metric}. Loaded index metric: {data['metric'].item()}"
                 )
             if data["dim"].item() != self.dim:
                 raise ValueError(
-                    f"Dimension mismatch. Index dimension: {self.dim}. Loaded index dimension: {data['dim'].item()}."
+                    f"Dimension mismatch. Index dimension: {self.dim}. Loaded index dimension: {data['dim'].item()}"
                 )
             if data["dtype"].item() != self.dtype:
                 raise ValueError(
-                    f"Dtype mismatch. Index dtype: {self.dtype}. Loaded index dtype: {data['dtype'].item()}."
+                    f"Dtype mismatch. Index dtype: {self.dtype}. Loaded index dtype: {data['dtype'].item()}"
                 )
             self.embeddings = data["embeddings"]
             self.index_map = data["index_map"].tolist()
@@ -102,8 +109,8 @@ class Index:
             raise ValueError(f"k cannot be greater than the number of items in the index: {len(self)}")
         if self.dim not in query_embedding.shape:
             raise ValueError(
-                f"Query embedding has invalid dimension: {query_embedding.shape}. "
-                f"Expected embedding dimension: {self.dim}."
+                f"Query embedding has invalid dimension: {query_embedding.shape}"
+                f"Expected embedding dimension: {self.dim}"
             )
 
         query_embedding = query_embedding.astype(self.dtype)
@@ -142,4 +149,4 @@ class Index:
     def _validate_indices_exist(self, indices: List[int]) -> None:
         for index in indices:
             if index not in self.index_map:
-                raise KeyError(f"Index {index} not found.")
+                raise KeyError(f"Index {index} not found")
