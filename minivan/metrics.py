@@ -23,11 +23,11 @@ def euclidean_metric(query_embedding: np.ndarray, embeddings: np.ndarray) -> np.
 
 
 def get_metric(metric: str):
-    if metric == "dot_product":
+    if metric == DOT_PRODUCT:
         return dot_product_metric
-    elif metric == "cosine":
+    elif metric == COSINE:
         return cosine_metric
-    elif metric == "euclidean":
+    elif metric == EUCLIDEAN:
         return euclidean_metric
     else:
         raise ValueError(f"Invalid metric: {metric}. Supported metrics are: {DOT_PRODUCT}, {COSINE}, {EUCLIDEAN}.")
