@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "minivan-tools"
-version = "0.1.4"
+version = "0.1.5"
 description = "Exact nearest neighbor search library for those times when \"approximate\" just won't cut it (or is simply overkill)"
 authors = ["aismlv <adilzhan.ismailov@gmail.com>"]
 license = "Apache-2.0"
