@@ -5,7 +5,7 @@
 [![PyPI version](https://badge.fury.io/py/minivan-tools.svg?)](https://pypi.org/project/minivan-tools/)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-`minivan` is an exact nearest neighbor search Python library for those times when "approximate" just won't cut it (or is simply overkill).
+`minivan` is an exact nearest neighbor search Python library for those times when "approximate" just won't cut it (or is simply an overkill).
 
 ## Installation
 
@@ -49,13 +49,11 @@ index.save(filepath)
 new_index = Index.from_file(filepath)
 ```
 
-## matmul vs ANN
+## `np.matmul` vs ANN
 
-Due to numpy's use of BLAS and other optimisations, brute-force search is performant enough for a large set of real-world applications. There are a bunch of cases when you might not need an approximate nearest neighbour library and can go with a simpler approach:
+In most cases you would want to go with an ANN solution such as [hnswlib](https://github.com/nmslib/hnswlib), but due to numpy's use of BLAS and other optimisations, brute-force search is performant enough for a large set of applications (see a [quick benchmark](https://github.com/aismlv/minivan/blob/main/experiments/benchmark/README.md) for an illustration.) There are a bunch of cases when you might want to start with a simpler approach:
 
 - Your document set is not in the multiple millions
 - You're in the experimentation phase and want to iterate on the index rapidly with fast build times
-- Your application requires the best accuracy
+- Your application requires the best possible accuracy
 - You want to avoid the need to finetune hyperparameters (which can affect [performance and latency](https://github.com/erikbern/ann-benchmarks) quite a lot)
-
-See a [quick benchmark](https://github.com/aismlv/minivan/blob/main/experiments/benchmark/README.md) for an illustration.
